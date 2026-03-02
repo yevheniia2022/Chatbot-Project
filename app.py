@@ -8,6 +8,9 @@ def home():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_input = request.json.get("message").lower()
-    # your chatbot logic here...
-    return jsonify({"response": "Example response"})
+    user_input = request.json.get("message", "")
+    # Replace this with your chatbot logic
+    return jsonify({"response": f"You said: {user_input}"})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
