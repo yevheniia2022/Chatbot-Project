@@ -1,59 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>EnergyTag Chatbot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #F5F5F5;
-            color: #212121;
-            text-align: center;
-            padding: 40px;
-        }
-        h1 { color: #2E7D32; }
-        form { margin: 20px 0; }
-        input[type="text"] {
-            padding: 10px;
-            width: 300px;
-            border: 2px solid #1565C0;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #1565C0;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        button:hover { background-color: #2E7D32; }
-        .chat-box {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            display: inline-block;
-            text-align: left;
-            max-width: 600px;
-        }
-        .user { color: #1565C0; font-weight: bold; }
-        .bot { color: #2E7D32; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <h1>EnergyTag Chatbot</h1>
-    <form method="POST">
-        <input type="text" name="message" placeholder="Ask me something about EnergyTag" required>
-        <button type="submit">Send</button>
-    </form>
+import os
+from flask import Flask, request, render_template
+import openai
 
-    {% if user_input %}
-    <div class="chat-box">
-        <p><span class="user">You:</span> {{ user_input }}</p>
-        <p><span class="bot">Bot:</span> {{ bot_reply }}</p>
-    </div>
-    {% endif %}
-</body>
-</html>
+app = Flask(__name__)
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+ENERGYTAG_CONTEXT = """
+EnergyTag is a non-profit initiative defining a standard for hourly energy certificates.
+It enables accurate carbon accounting, supports storage and flexibility, and builds trust
+by linking actual renewable production to consumption in real time.
+See more at energytag.org.
+"""
+
+def get_bot_reply(user_input):
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are an expert on the EnergyTag Standard. Use the context provided to answer clearly."},
+                {"role": "system", "content": ENERGYTAG_CONTEXT},
+                {"role": "user", "content": user_input}
+            ]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"Error connecting to OpenAI: {str(e)}"
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    bot_reply = None
+    user_input = None
+    
+    if request.method == "POST":
+        user_input = request.form.get("message")
+        if user_input:
+            bot_reply = get_bot_reply(user_input)
+            
+    return render_template("index.html", user_input=user_input, bot_reply=bot_reply)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
