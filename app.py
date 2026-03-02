@@ -16,9 +16,9 @@ See more at energytag.org.
 
 def get_bot_reply(user_input):
     response = openai.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4o-mini",  # lightweight model
         messages=[
-            {"role": "system", "content": "You are an expert on the EnergyTag Standard."},
+            {"role": "system", "content": "You are an expert on the EnergyTag Standard. Use the context provided to answer clearly."},
             {"role": "system", "content": ENERGYTAG_CONTEXT},
             {"role": "user", "content": user_input}
         ]
