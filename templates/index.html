@@ -5,25 +5,21 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #F5F5F5; /* light gray background */
-            color: #212121; /* dark gray text */
+            background-color: #F5F5F5;
+            color: #212121;
             text-align: center;
             padding: 40px;
         }
-        h1 {
-            color: #2E7D32; /* green title */
-        }
-        form {
-            margin: 20px 0;
-        }
+        h1 { color: #2E7D32; }
+        form { margin: 20px 0; }
         input[type="text"] {
             padding: 10px;
             width: 300px;
-            border: 2px solid #1565C0; /* blue border */
+            border: 2px solid #1565C0;
             border-radius: 5px;
         }
         button {
-            background-color: #1565C0; /* blue button */
+            background-color: #1565C0;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -31,9 +27,7 @@
             margin-left: 10px;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #2E7D32; /* green hover */
-        }
+        button:hover { background-color: #2E7D32; }
         .chat-box {
             margin-top: 30px;
             padding: 20px;
@@ -44,20 +38,14 @@
             text-align: left;
             max-width: 600px;
         }
-        .user {
-            color: #1565C0; /* blue for user */
-            font-weight: bold;
-        }
-        .bot {
-            color: #2E7D32; /* green for bot */
-            font-weight: bold;
-        }
+        .user { color: #1565C0; font-weight: bold; }
+        .bot { color: #2E7D32; font-weight: bold; }
     </style>
 </head>
 <body>
     <h1>EnergyTag Chatbot</h1>
     <form method="POST">
-        <input type="text" name="message" placeholder="Ask me something">
+        <input type="text" name="message" placeholder="Ask me something about EnergyTag" required>
         <button type="submit">Send</button>
     </form>
 
@@ -69,4 +57,3 @@
     {% endif %}
 </body>
 </html>
-
