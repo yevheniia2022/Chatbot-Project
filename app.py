@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-# Load API key from environment
+# Load API key from environment (already set in Render)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 ENERGYTAG_CONTEXT = """
