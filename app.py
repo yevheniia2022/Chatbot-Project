@@ -1,11 +1,11 @@
 import os
 from flask import Flask, request, render_template
-from openai import OpenAI
+import openai
 
 app = Flask(__name__)
 
-# Initialize the OpenAI client using the Environment Variable from Render
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+# Load API key from environment
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 ENERGYTAG_CONTEXT = """
 EnergyTag is a non-profit initiative defining a standard for hourly energy certificates.
@@ -16,7 +16,7 @@ See more at energytag.org.
 
 def get_bot_reply(user_input):
     try:
-        response = client.chat.completions.create(
+        response = openai.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are an expert on the EnergyTag Standard. Use the context provided to answer clearly."},
@@ -41,5 +41,4 @@ def index():
     return render_template("index.html", user_input=user_input, bot_reply=bot_reply)
 
 if __name__ == "__main__":
-    # Standard Flask port for local testing; Render uses Gunicorn in production
     app.run(host="0.0.0.0", port=5000)
