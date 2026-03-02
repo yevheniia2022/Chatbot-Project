@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-# Load your API key from environment variables
+# Load API key from environment (already set in Render)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 ENERGYTAG_CONTEXT = """
@@ -22,8 +22,8 @@ def home():
 def chat():
     user_input = request.json.get("message", "")
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
+    response = openai.chat.completions.create(
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are an expert on the EnergyTag Standard."},
             {"role": "system", "content": ENERGYTAG_CONTEXT},
@@ -31,7 +31,7 @@ def chat():
         ]
     )
 
-    answer = response["choices"][0]["message"]["content"]
+    answer = response.choices[0].message.content
     return jsonify({"response": answer})
 
 if __name__ == "__main__":
