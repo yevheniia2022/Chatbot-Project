@@ -6,10 +6,10 @@ from google.genai import types
 app = Flask(__name__)
 
 # 1. Initialize Gemini Client
-# It automatically reads GEMINI_API_KEY from your Render Environment Variables
+# Uses the GEMINI_API_KEY from your Render Environment Variables
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# 2. Define your specialized context
+# 2. Specialized EnergyTag context
 ENERGYTAG_CONTEXT = (
     "You are an expert on the EnergyTag Standard. "
     "EnergyTag is a non-profit initiative defining a standard for hourly energy certificates. "
@@ -18,10 +18,9 @@ ENERGYTAG_CONTEXT = (
 
 def get_bot_reply(user_input):
     try:
-        # UPDATED MODEL ID: 'gemini-2.0-flash' is the stable 2026 free-tier workhorse.
-        # If this still 404s, 'gemini-1.5-flash' is the guaranteed fallback.
+        # MARCH 2026 UPDATE: Using the specific preview identifier for Gemini 3 Flash
         response = client.models.generate_content(
-            model="gemini-2.0-flash", 
+            model="gemini-3-flash-preview", 
             contents=user_input,
             config=types.GenerateContentConfig(
                 system_instruction=ENERGYTAG_CONTEXT,
@@ -30,9 +29,9 @@ def get_bot_reply(user_input):
         )
         return response.text
     except Exception as e:
-        # This logs the specific error to Render so we can see it
+        # Logs the specific error to Render for your debugging
         print(f"Gemini Error: {e}")
-        return f"Error: {str(e)}" # Temporarily show the error on screen to debug
+        return f"Wait, the bot is thinking too hard! (Error: {str(e)})"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -46,6 +45,6 @@ def index():
     return render_template("index.html", user_input=user_input, bot_reply=bot_reply)
 
 if __name__ == "__main__":
-    # Render provides the PORT environment variable
+    # Render's dynamic port binding fix
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
