@@ -18,9 +18,10 @@ ENERGYTAG_CONTEXT = (
 
 def get_bot_reply(user_input):
     try:
-        # Using the March 2026 stable model ID
+        # UPDATED MODEL ID: 'gemini-2.0-flash' is the stable 2026 free-tier workhorse.
+        # If this still 404s, 'gemini-1.5-flash' is the guaranteed fallback.
         response = client.models.generate_content(
-            model="gemini-3-flash-preview",
+            model="gemini-2.0-flash", 
             contents=user_input,
             config=types.GenerateContentConfig(
                 system_instruction=ENERGYTAG_CONTEXT,
@@ -29,9 +30,9 @@ def get_bot_reply(user_input):
         )
         return response.text
     except Exception as e:
-        # This will show the real error in your Render Logs for debugging
+        # This logs the specific error to Render so we can see it
         print(f"Gemini Error: {e}")
-        return "The bot is resting. Please try again in a moment."
+        return f"Error: {str(e)}" # Temporarily show the error on screen to debug
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -46,5 +47,5 @@ def index():
 
 if __name__ == "__main__":
     # Render provides the PORT environment variable
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
