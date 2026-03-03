@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copy requirements and install
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install --force-reinstall -r requirements.txt
 
 # Copy the rest of the app
 COPY . .
