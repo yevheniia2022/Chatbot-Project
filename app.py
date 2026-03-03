@@ -28,6 +28,7 @@ def get_bot_reply(user_input):
     except Exception as e:
         return f"Error connecting to OpenAI: {str(e)}"
 
+# ✅ Root route for homepage
 @app.route("/", methods=["GET", "POST"])
 def index():
     bot_reply = None
