@@ -1,11 +1,11 @@
 import os
 from flask import Flask, request, render_template
-import openai
+from openai import OpenAI
 
 app = Flask(__name__)
 
-# Load API key from environment
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Initialize OpenAI client with API key
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 ENERGYTAG_CONTEXT = """
 EnergyTag is a non-profit initiative defining a standard for hourly energy certificates.
@@ -16,7 +16,7 @@ See more at energytag.org.
 
 def get_bot_reply(user_input):
     try:
-        response = openai.chat.completions.create(
+        response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are an expert on the EnergyTag Standard. Use the context provided to answer clearly."},
