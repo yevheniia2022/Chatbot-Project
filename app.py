@@ -11,9 +11,10 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # 2. Specialized EnergyTag context
 ENERGYTAG_CONTEXT = (
-    "You are an expert on the EnergyTag Standard. "
-    "EnergyTag is a non-profit initiative defining a standard for hourly energy certificates. "
-    "It enables accurate carbon accounting and links renewable production to consumption in real time."
+   "You are the EnergyTag AI Assistant. "
+    "You must ONLY answer questions related to the EnergyTag standard, hourly energy certificates, 
+    "carbon accounting, renewable energy tracking, and related policy/audit contexts."
+    "If asked about anything else, politely respond: 'I can only answer questions about the EnergyTag standard.'"
 )
 
 def get_bot_reply(user_input):
